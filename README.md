@@ -1,398 +1,213 @@
-\# Evaluación 04 - Arquitectura de Microservicios
+# 🚀 Evaluación 04 - Arquitectura de Microservicios
 
+> Sistema distribuido desarrollado con **Spring Boot** y **Spring Cloud** para la gestión de usuarios, proyectos y tareas, implementando una arquitectura basada en microservicios.
 
+---
 
-\## Descripción
+# 📖 Descripción
 
+Este proyecto implementa una arquitectura de microservicios aplicando los principales componentes del ecosistema Spring Cloud.
 
+La solución integra configuración centralizada, descubrimiento de servicios, comunicación entre microservicios mediante OpenFeign, tolerancia a fallos utilizando Resilience4j y acceso unificado a través de un API Gateway.
 
-Este proyecto corresponde al desarrollo de una solución basada en Arquitectura de Microservicios utilizando Spring Boot y Spring Cloud.
+---
 
+# 🎯 Objetivos
 
+- ✅ Implementar una arquitectura basada en microservicios.
+- ✅ Centralizar la configuración mediante Config Server.
+- ✅ Registrar servicios con Eureka.
+- ✅ Exponer los servicios mediante API Gateway.
+- ✅ Implementar comunicación entre microservicios usando OpenFeign.
+- ✅ Aplicar Circuit Breaker y Retry.
+- ✅ Implementar Fallback para tolerancia a fallos.
+- ✅ Gestionar información mediante MySQL.
+- ✅ Contenerizar la solución con Docker.
 
-El sistema implementa una arquitectura distribuida para la gestión de usuarios, proyectos y tareas, aplicando principios de desacoplamiento, configuración centralizada, descubrimiento de servicios y comunicación entre microservicios mediante OpenFeign.
+---
 
-
-
-Además, se implementan mecanismos de tolerancia a fallos utilizando Resilience4j, permitiendo que el sistema continúe funcionando cuando alguno de los servicios no se encuentre disponible.
-
-
-
-\---
-
-
-
-\# Objetivos
-
-
-
-\- Implementar una arquitectura basada en microservicios.
-
-\- Centralizar la configuración mediante Spring Cloud Config Server.
-
-\- Registrar y descubrir servicios utilizando Netflix Eureka.
-
-\- Exponer los servicios mediante Spring Cloud Gateway.
-
-\- Implementar comunicación entre microservicios utilizando OpenFeign.
-
-\- Aplicar Circuit Breaker y Retry con Resilience4j.
-
-\- Gestionar información mediante bases de datos MySQL independientes para cada servicio.
-
-\- Contenerizar la solución mediante Docker y Docker Compose.
-
-
-
-\---
-
-
-
-\# Arquitectura del Proyecto
-
-
-
-El sistema está compuesto por los siguientes componentes:
-
-
-
-\- Config Server
-
-\- Eureka Server
-
-\- API Gateway
-
-\- Usuario Service
-
-\- Proyecto Service
-
-\- Tarea Service
-
-\- Config Repository
-
-
-
-La comunicación entre servicios se realiza mediante OpenFeign y el descubrimiento dinámico de servicios a través de Eureka.
-
-
-
-\---
-
-
-
-\# Tecnologías Utilizadas
-
-
-
-\- Java 21
-
-\- Spring Boot 3.5.16
-
-\- Spring Cloud 2025.0.3
-
-\- Spring Cloud Config Server
-
-\- Netflix Eureka
-
-\- Spring Cloud Gateway
-
-\- Spring Data JPA
-
-\- OpenFeign
-
-\- Resilience4j
-
-\- MySQL
-
-\- Maven
-
-\- Docker
-
-\- Docker Compose
-
-\- Postman
-
-\- Git y GitHub
-
-
-
-\---
-
-
-
-\# Estructura del Proyecto
-
-
+# 🏗️ Arquitectura
 
 ```text
-
-evaluacion04-microservicios
-
-│
-
-├── api-gateway
-
-├── config-repo
-
-├── config-server
-
-├── eureka-server
-
-├── proyecto-service
-
-├── tarea-service
-
-├── usuario-service
-
-│
-
-├── docker-compose.yml
-
-├── script.sql
-
-└── README.md
-
+                     +----------------------+
+                     |     Config Server    |
+                     +----------+-----------+
+                                |
+                                |
+                     +----------v-----------+
+                     |     Eureka Server    |
+                     +----------+-----------+
+                                |
+             ---------------------------------------------
+             |                    |                     |
+             |                    |                     |
+   +---------v-----+   +----------v------+   +----------v------+
+   | UsuarioService|   | ProyectoService |   |  TareaService   |
+   +---------------+   +-----------------+   +-----------------+
+            ^                   ^                     |
+            |                   |                     |
+            +---------Feign-----+---------Feign-------+
+                                |
+                     +----------v-----------+
+                     |     API Gateway      |
+                     +----------------------+
 ```
 
+---
 
+# 🧩 Microservicios
 
-\---
+## 👤 Usuario Service
 
+Permite administrar la información de los usuarios.
 
+### Funciones
 
-\# Microservicios
+- Registrar usuarios
+- Consultar usuarios
+- Actualizar usuarios
+- Eliminar usuarios
 
+---
 
+## 📁 Proyecto Service
 
-\## Usuario Service
+Gestiona los proyectos registrados.
 
+### Funciones
 
+- CRUD de proyectos
+- Consulta del responsable mediante OpenFeign
+- Circuit Breaker
+- Retry
 
-Permite realizar el mantenimiento completo de usuarios mediante operaciones CRUD.
+---
 
+## ✅ Tarea Service
 
+Gestiona las tareas asociadas a los proyectos.
 
-Funciones principales:
+### Funciones
 
+- CRUD de tareas
+- Consulta de proyectos mediante OpenFeign
+- Circuit Breaker
+- Retry
 
+---
 
-\- Registrar usuarios
+# 🔗 Comunicación entre Servicios
 
-\- Consultar usuarios
+```text
+Proyecto Service
+        │
+        ▼
+ Usuario Service
 
-\- Actualizar usuarios
+Tarea Service
+        │
+        ▼
+ Proyecto Service
+```
 
-\- Eliminar usuarios
+La comunicación se implementa mediante **Spring Cloud OpenFeign**, permitiendo el consumo transparente entre microservicios.
 
+---
 
+# 🛡️ Resilience4j
 
-\---
+Se implementaron mecanismos de tolerancia a fallos mediante:
 
+- 🔄 Retry
+- 🚦 Circuit Breaker
+- 🛟 Fallback
 
+Cuando un servicio no se encuentra disponible, el sistema responde con información alternativa sin afectar la disponibilidad general.
 
-\## Proyecto Service
+---
 
+# ⚙️ Tecnologías
 
+| Tecnología | Versión |
+|------------|---------|
+| ☕ Java | 21 |
+| 🌱 Spring Boot | 3.5.16 |
+| ☁️ Spring Cloud | 2025.0.3 |
+| 🗄️ MySQL | 8 |
+| 📦 Maven | 3.x |
+| 🐳 Docker | Compose |
+| 🧪 Postman | API Testing |
+| 📝 Git | Control de versiones |
+| 🌐 GitHub | Repositorio |
 
-Administra los proyectos registrados y consulta información del usuario responsable mediante OpenFeign.
+---
 
+# 📂 Estructura del Proyecto
 
+```text
+evaluacion04-microservicios
+│
+├── 📁 api-gateway
+├── 📁 config-repo
+├── 📁 config-server
+├── 📁 eureka-server
+├── 📁 usuario-service
+├── 📁 proyecto-service
+├── 📁 tarea-service
+│
+├── 🐳 docker-compose.yml
+├── 🗄️ script.sql
+├── 📬 Evaluacion04-Microservicios.postman_collection.json
+└── 📖 README.md
+```
 
-Funciones principales:
+---
 
+# 🗄️ Base de Datos
 
+Cada microservicio trabaja con una base de datos independiente.
 
-\- CRUD de proyectos
+| Servicio | Base de Datos |
+|----------|---------------|
+| 👤 Usuario Service | usuario_db |
+| 📁 Proyecto Service | proyecto_db |
+| ✅ Tarea Service | tarea_db |
 
-\- Consulta del responsable del proyecto
+---
 
-\- Circuit Breaker y Retry
-
-
-
-\---
-
-
-
-\## Tarea Service
-
-
-
-Administra las tareas asociadas a los proyectos y consulta información del proyecto correspondiente.
-
-
-
-Funciones principales:
-
-
-
-\- CRUD de tareas
-
-\- Consulta del proyecto asociado
-
-\- Circuit Breaker y Retry
-
-
-
-\---
-
-
-
-\# Configuración Centralizada
-
-
-
-Toda la configuración de los microservicios se administra mediante Spring Cloud Config Server utilizando un repositorio de configuración (`config-repo`).
-
-
-
-Esto permite centralizar parámetros como:
-
-
-
-\- Puertos
-
-\- Configuración de MySQL
-
-\- Configuración de Eureka
-
-\- Mensajes del sistema
-
-
-
-\---
-
-
-
-\# Descubrimiento de Servicios
-
-
-
-Netflix Eureka permite registrar automáticamente todos los microservicios para facilitar la comunicación entre ellos sin depender de direcciones IP fijas.
-
-
-
-\---
-
-
-
-\# Comunicación entre Microservicios
-
-
-
-Se implementa comunicación mediante OpenFeign.
-
-
-
-Flujo de llamadas:
-
-
-
-Proyecto Service → Usuario Service
-
-
-
-Tarea Service → Proyecto Service
-
-
-
-\---
-
-
-
-\# Resiliencia
-
-
-
-Se implementaron mecanismos de tolerancia a fallos utilizando Resilience4j.
-
-
-
-Características implementadas:
-
-
-
-\- Circuit Breaker
-
-\- Retry
-
-\- Fallback personalizado
-
-
-
-Cuando un servicio deja de estar disponible, el sistema responde con información alternativa sin interrumpir el funcionamiento general.
-
-
-
-\---
-
-
-
-\# Docker
-
-
+# 🐳 Docker
 
 El proyecto incluye:
 
+- ✅ Dockerfile para cada microservicio.
+- ✅ docker-compose.yml para el despliegue completo.
 
+---
 
-\- Dockerfile para cada microservicio.
+# 📬 Colección Postman
 
-\- Archivo docker-compose.yml para el despliegue de toda la arquitectura.
+Se incluye una colección con las pruebas realizadas para:
 
+- Usuario Service
+- Proyecto Service
+- Tarea Service
+- API Gateway
+- Circuit Breaker
+- Fallback
 
+---
 
-\---
+# 👩‍💻 Autor
 
+**Naomi Isabel Sanchez Chavarria**
 
+🎓 Carrera de Diseño y Desarrollo de Software
 
-\# Base de Datos
+🏫 TECSUP
 
+---
 
+# ⭐ Observación
 
-Cada microservicio utiliza una base de datos independiente:
-
-
-
-\- usuario\_db
-
-\- proyecto\_db
-
-\- tarea\_db
-
-
-
-El archivo `script.sql` permite crear las bases de datos necesarias.
-
-
-
-\---
-
-
-
-\# Colección Postman
-
-
-
-Se incluye una colección de Postman con las pruebas realizadas sobre los diferentes microservicios y el API Gateway.
-
-
-
-\---
-
-
-
-\# Autor
-
-
-
-\*\*Naomi Isabel Sanchez Chavarria\*\*
-
-
-
-Carrera de Diseño y Desarrollo de Software
-
-
-
-TECSUP
+Este proyecto fue desarrollado con fines académicos para demostrar la implementación de una arquitectura moderna basada en microservicios utilizando el ecosistema Spring Cloud.
 
