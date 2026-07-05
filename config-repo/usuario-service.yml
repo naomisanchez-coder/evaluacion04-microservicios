@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: usuario-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/usuario_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+mensaje:
+  servicio: "Usuario Service activo desde Config Server"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: usuario-service
+            uri: lb://usuario-service
+            predicates:
+              - Path=/api/usuarios/**
+
+          - id: proyecto-service
+            uri: lb://proyecto-service
+            predicates:
+              - Path=/api/proyectos/**
+
+          - id: tarea-service
+            uri: lb://tarea-service
+            predicates:
+              - Path=/api/tareas/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+mensaje:
+  gateway: "API Gateway funcionando correctamente"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

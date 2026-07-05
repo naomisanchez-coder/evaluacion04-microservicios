@@ -1,0 +1,12 @@
+.idea/
+target/
+*.class
+*.log
+
+*/target/
+*/.idea/
+
+.env
+*.env
+
+.DS_Store
